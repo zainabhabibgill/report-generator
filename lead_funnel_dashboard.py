@@ -3,12 +3,13 @@ import pandas as pd
 import plotly.express as px
 import random
 
+import streamlit as st
+
 st.set_page_config(page_title="Lead Funnel Intelligence Dashboard", layout="wide")
-st.title("🤖 AI-Powered Lead Funnel Intelligence Report")
-st.set_page_config(page_title="Lead Funnel Intelligence Dashboard", layout="wide")
+
 st.title("🤖 AI-Powered Lead Funnel Intelligence Report")
 
-# subtitle for dahsboard
+# dashboard heading
 st.markdown("Upload a lead file and instantly generate actionable insights, enriched scores, and suggested follow-up strategies — powered by AI.")
 
 
