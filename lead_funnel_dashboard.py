@@ -5,6 +5,12 @@ import random
 
 st.set_page_config(page_title="Lead Funnel Intelligence Dashboard", layout="wide")
 st.title("🤖 AI-Powered Lead Funnel Intelligence Report")
+st.set_page_config(page_title="Lead Funnel Intelligence Dashboard", layout="wide")
+st.title("🤖 AI-Powered Lead Funnel Intelligence Report")
+
+# subtitle for dahsboard
+st.markdown("Upload a lead file and instantly generate actionable insights, enriched scores, and suggested follow-up strategies — powered by AI.")
+
 
 # file upload
 uploaded_file = st.file_uploader("Upload your CSV or Excel file of leads", type=["csv", "xlsx"])
