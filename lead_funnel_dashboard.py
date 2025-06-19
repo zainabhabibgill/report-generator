@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import random
-import openai
 import os
 from tempfile import NamedTemporaryFile
+from openai import OpenAI
 
 # Set up page
 st.set_page_config(page_title="Lead Funnel Intelligence Dashboard", layout="wide")
@@ -20,7 +20,7 @@ st.write("Upload a demo call audio file (.mp3 or .wav) to generate a transcript 
 audio_file = st.file_uploader("Upload audio file", type=["mp3", "wav"], key="audio_uploader")
 
 if audio_file:
-    openai.api_key = st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else os.getenv("OPENAI_API_KEY")
+    client = OpenAI(api_key=st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else os.getenv("OPENAI_API_KEY"))
 
     with NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
         tmp_file.write(audio_file.read())
@@ -28,13 +28,14 @@ if audio_file:
 
     with st.spinner("Transcribing with Whisper..."):
         try:
-            transcript = openai.Audio.transcribe(
-                model="whisper-1",
-                file=open(tmp_path, "rb"),
-                response_format="text"
-            )
-            st.subheader("📄 Transcribed Call")
-            st.text_area("Transcript", transcript, height=300)
+            with open(tmp_path, "rb") as file:
+                transcript = client.audio.transcriptions.create(
+                    model="whisper-1",
+                    file=file,
+                    response_format="text"
+                )
+                st.subheader("📄 Transcribed Call")
+                st.text_area("Transcript", transcript, height=300)
         except Exception as e:
             st.error(f"Transcription failed: {e}")
 
