@@ -7,27 +7,26 @@ st.set_page_config(page_title="Lead Funnel Intelligence Dashboard", layout="wide
 
 st.title("🤖 AI-Powered Lead Funnel Intelligence Report")
 
-# dashboard heading
-st.markdown("Upload a lead file and instantly generate actionable insights, enriched scores, and suggested follow-up strategies — powered by AI.")
+# Dashboard intro text
+st.markdown("Upload a CSV lead file and instantly generate actionable insights, enriched scores, and suggested follow-up strategies — powered by AI.")
 
-# file upload
-uploaded_file = st.file_uploader("Upload your CSV or Excel file of leads", type=["csv", "xlsx"])
+# File upload (CSV only)
+uploaded_file = st.file_uploader("Upload your CSV lead file", type=["csv"])
 if uploaded_file:
-    if uploaded_file.name.endswith('.csv'):
-        df = pd.read_csv(uploaded_file, header=1)
-    else:
-        df = pd.read_excel(uploaded_file, header=1)
+    df = pd.read_csv(uploaded_file, header=1)
+    df.columns = df.columns.str.strip()  # Clean whitespace in column names
 
     st.subheader("📄 Uploaded Lead Data Preview")
     st.dataframe(df.head(), use_container_width=True)
 
+    # Lead Segmentation
     st.header("📊 Lead Segmentation")
 
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("By Description")
-        top_industries = df['description'].value_counts().nlargest(10)
-        fig1 = px.bar(top_industries, title="Top Startup Descriptions", labels={'value': 'Count', 'index': 'Description'})
+        top_descriptions = df['description'].value_counts().nlargest(10)
+        fig1 = px.bar(top_descriptions, title="Top Startup Descriptions", labels={'value': 'Count', 'index': 'Description'})
         st.plotly_chart(fig1, use_container_width=True)
 
     with col2:
@@ -46,13 +45,14 @@ if uploaded_file:
         return min(score, 100)
 
     df['readiness_score'] = df.apply(score_lead, axis=1)
+
     st.write("### Top Leads by Readiness Score")
     st.dataframe(df[['startupName', 'readiness_score']].sort_values(by='readiness_score', ascending=False), use_container_width=True)
 
     fig4 = px.histogram(df, x='readiness_score', nbins=10, title="Readiness Score Distribution")
     st.plotly_chart(fig4, use_container_width=True)
 
-    # Behavioral Patterns (Placeholders)
+    # Behavioral Patterns (Placeholder)
     st.header("📈 Behavioral Patterns (Coming Soon)")
     st.info("This section will analyze email open/reply behavior when such data is available.")
 
@@ -69,6 +69,5 @@ if uploaded_file:
         st.subheader(choice)
         st.dataframe(df[df['follow_up'] == choice][['startupName', 'contact1', 'readiness_score']], use_container_width=True)
 
-    # export
+    # Download enriched data
     st.download_button("⬇️ Download Scored Leads as CSV", data=df.to_csv(index=False), file_name="enhanced_leads.csv", mime="text/csv")
-
