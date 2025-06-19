@@ -32,7 +32,7 @@ if uploaded_file:
 
     with col2:
         st.subheader("By Location")
-        top_locations = df['Unnamed: 2'].value_counts().nlargest(10)
+        top_locations = df['location'].value_counts().nlargest(10)
         fig2 = px.bar(top_locations, title="Top Locations", labels={'value': 'Count', 'index': 'Location'})
         st.plotly_chart(fig2, use_container_width=True)
 
@@ -67,7 +67,8 @@ if uploaded_file:
 
     for choice in follow_up_choices:
         st.subheader(choice)
-        st.dataframe(df[df['follow_up'] == choice][['startupName', 'Unnamed: 3', 'readiness_score']], use_container_width=True)
+        st.dataframe(df[df['follow_up'] == choice][['startupName', 'contact1', 'readiness_score']], use_container_width=True)
 
     # export
     st.download_button("⬇️ Download Scored Leads as CSV", data=df.to_csv(index=False), file_name="enhanced_leads.csv", mime="text/csv")
+
