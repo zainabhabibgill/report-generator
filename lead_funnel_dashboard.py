@@ -14,7 +14,7 @@ st.title("🤖 AI-Powered Lead Funnel Intelligence Report")
 st.markdown("Upload a CSV lead file and/or demo call audio to generate actionable insights, enriched scores, and personalized follow-up strategies — powered by AI.")
 
 # ========== Audio Transcription Section ==========
-st.header("🎙️ AI Call Transcription (Whisper)")
+st.header("🎙️ AI Call Transcription")
 st.write("Upload a demo call audio file (.mp3 or .wav) to generate a transcript you can use to personalize follow-ups.")
 
 audio_file = st.file_uploader("Upload audio file", type=["mp3", "wav"], key="audio_uploader")
