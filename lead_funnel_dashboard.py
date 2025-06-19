@@ -21,26 +21,26 @@ audio_file = st.file_uploader("Upload audio file", type=["mp3", "wav"], key="aud
 
 if audio_file:
     if "openai_api_key" not in st.secrets:
-    st.error("❌ OpenAI API key not found in Streamlit secrets.")
-else:
-    client = OpenAI(api_key=st.secrets["openai_api_key"]))
+        st.error("❌ OpenAI API key not found in Streamlit secrets.")
+    else:
+        client = OpenAI(api_key=st.secrets["openai_api_key"])
 
-    with NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
-        tmp_file.write(audio_file.read())
-        tmp_path = tmp_file.name
+        with NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
+            tmp_file.write(audio_file.read())
+            tmp_path = tmp_file.name
 
-    with st.spinner("Transcribing with Whisper..."):
-        try:
-            with open(tmp_path, "rb") as file:
-                transcript = client.audio.transcriptions.create(
-                    model="whisper-1",
-                    file=file,
-                    response_format="text"
-                )
-                st.subheader("📄 Transcribed Call")
-                st.text_area("Transcript", transcript, height=300)
-        except Exception as e:
-            st.error(f"Transcription failed: {e}")
+        with st.spinner("Transcribing with Whisper..."):
+            try:
+                with open(tmp_path, "rb") as file:
+                    transcript = client.audio.transcriptions.create(
+                        model="whisper-1",
+                        file=file,
+                        response_format="text"
+                    )
+                    st.subheader("📄 Transcribed Call")
+                    st.text_area("Transcript", transcript, height=300)
+            except Exception as e:
+                st.error(f"Transcription failed: {e}")
 
 st.write("✅ Transcript section loaded")
 
