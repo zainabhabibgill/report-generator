@@ -20,7 +20,10 @@ st.write("Upload a demo call audio file (.mp3 or .wav) to generate a transcript 
 audio_file = st.file_uploader("Upload audio file", type=["mp3", "wav"], key="audio_uploader")
 
 if audio_file:
-    client = OpenAI(api_key=st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else os.getenv("OPENAI_API_KEY"))
+    if "openai_api_key" not in st.secrets:
+    st.error("❌ OpenAI API key not found in Streamlit secrets.")
+else:
+    client = OpenAI(api_key=st.secrets["openai_api_key"]))
 
     with NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
         tmp_file.write(audio_file.read())
