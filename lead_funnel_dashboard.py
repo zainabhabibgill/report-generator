@@ -13,6 +13,33 @@ st.title("🤖 AI-Powered Lead Funnel Intelligence Report")
 # Dashboard intro text
 st.markdown("Upload a CSV lead file and/or demo call audio to generate actionable insights, enriched scores, and personalized follow-up strategies — powered by AI.")
 
+# ========== Audio Transcription Section ==========
+st.header("🎙️ AI Call Transcription (Whisper)")
+st.write("Upload a demo call audio file (.mp3 or .wav) to generate a transcript you can use to personalize follow-ups.")
+
+audio_file = st.file_uploader("Upload audio file", type=["mp3", "wav"], key="audio_uploader")
+
+if audio_file:
+    openai.api_key = st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else os.getenv("OPENAI_API_KEY")
+
+    with NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
+        tmp_file.write(audio_file.read())
+        tmp_path = tmp_file.name
+
+    with st.spinner("Transcribing with Whisper..."):
+        try:
+            transcript = openai.Audio.transcribe(
+                model="whisper-1",
+                file=open(tmp_path, "rb"),
+                response_format="text"
+            )
+            st.subheader("📄 Transcribed Call")
+            st.text_area("Transcript", transcript, height=300)
+        except Exception as e:
+            st.error(f"Transcription failed: {e}")
+
+st.write("✅ Transcript section loaded")
+
 # ========== CSV Lead File Upload & Analysis ==========
 uploaded_file = st.file_uploader("Upload your CSV lead file", type=["csv"])
 if uploaded_file:
@@ -61,31 +88,3 @@ if uploaded_file:
 
     # Download enriched data
     st.download_button("⬇️ Download Scored Leads as CSV", data=df.to_csv(index=False), file_name="enhanced_leads.csv", mime="text/csv")
-
-# ========== Audio Transcription Section ==========
-st.header("🎙️ AI Call Transcription (Whisper)")
-st.write("Upload a demo call audio file (.mp3 or .wav) to generate a transcript you can use to personalize follow-ups.")
-
-audio_file = st.file_uploader("Upload audio file", type=["mp3", "wav"], key="audio_uploader")
-
-if audio_file:
-    openai.api_key = st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else os.getenv("OPENAI_API_KEY")
-
-    with NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
-        tmp_file.write(audio_file.read())
-        tmp_path = tmp_file.name
-
-    with st.spinner("Transcribing with Whisper..."):
-        try:
-            transcript = openai.Audio.transcribe(
-                model="whisper-1",
-                file=open(tmp_path, "rb"),
-                response_format="text"
-            )
-            st.subheader("📄 Transcribed Call")
-            st.text_area("Transcript", transcript, height=300)
-        except Exception as e:
-            st.error(f"Transcription failed: {e}")
-
-st.write("✅ Transcript section loaded")
-
