@@ -86,3 +86,6 @@ if audio_file:
             st.text_area("Transcript", transcript, height=300)
         except Exception as e:
             st.error(f"Transcription failed: {e}")
+
+st.write("✅ Transcript section loaded")
+
