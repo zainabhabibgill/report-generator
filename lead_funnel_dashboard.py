@@ -42,6 +42,8 @@ if audio_file:
             except Exception as e:
                 st.error(f"Transcription failed: {e}")
 
+os.getenv("openai_api_key")
+
 # ========== CSV Lead File Upload & Analysis ==========
 uploaded_file = st.file_uploader("Upload your CSV lead file", type=["csv"])
 if uploaded_file:
