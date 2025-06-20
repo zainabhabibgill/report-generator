@@ -10,6 +10,9 @@ from openai import OpenAI
 st.set_page_config(page_title="Lead Funnel Intelligence Dashboard", layout="wide")
 st.title("🤖 AI-Powered Lead Funnel Intelligence Report")
 
+# Debug banner to verify commit + push worked
+st.info("🚀 Streamlit app loaded successfully — everything's working!")
+
 # Dashboard intro text
 st.markdown("Upload a CSV lead file and/or demo call audio to generate actionable insights, enriched scores, and personalized follow-up strategies — powered by AI.")
 
