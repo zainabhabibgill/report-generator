@@ -6,7 +6,6 @@ import os
 from tempfile import NamedTemporaryFile
 from openai import OpenAI
 
-print("🌟 Running latest version of Streamlit dashboard")
 # Set up page
 st.set_page_config(page_title="Lead Funnel Intelligence Dashboard", layout="wide")
 st.title("🤖 AI-Powered Lead Funnel Intelligence Report")
