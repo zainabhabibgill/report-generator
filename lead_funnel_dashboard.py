@@ -20,10 +20,11 @@ st.write("Upload a demo call audio file (.mp3 or .wav) to generate a transcript 
 audio_file = st.file_uploader("Upload audio file", type=["mp3", "wav"], key="audio_uploader")
 
 if audio_file:
-    if "openai_api_key" not in st.secrets:
-        st.error("❌ OpenAI API key not found in Streamlit secrets.")
+    api_key = st.secrets.get("openai_api_key") or os.getenv("openai_api_key")
+    if not api_key:
+        st.error("❌ OpenAI API key not found. Please set it in .streamlit/secrets.toml or your environment.")
     else:
-        client = OpenAI(api_key=st.secrets["openai_api_key"])
+        client = OpenAI(api_key=api_key)
 
         with NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
             tmp_file.write(audio_file.read())
@@ -39,10 +40,11 @@ if audio_file:
                     )
                     st.subheader("📄 Transcribed Call")
                     st.text_area("Transcript", transcript, height=300)
+                    st.success("✅ Transcription loaded successfully!")
             except Exception as e:
                 st.error(f"Transcription failed: {e}")
 
-os.getenv("openai_api_key")
+st.write("✅ Transcript section loaded")
 
 # ========== CSV Lead File Upload & Analysis ==========
 uploaded_file = st.file_uploader("Upload your CSV lead file", type=["csv"])
